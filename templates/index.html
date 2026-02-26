@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Risk Prediction System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .header-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px 20px 0 0;
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+        .header-section h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            padding: 10px 15px;
+            transition: all 0.3s;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102,126,234,0.25);
+        }
+        .form-label {
+            font-weight: 600;
+            color: #444;
+        }
+        .section-title {
+            color: #667eea;
+            font-weight: 700;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+        .btn-predict {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        .btn-predict:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102,126,234,0.5);
+            color: white;
+        }
+        .result-box {
+            display: none;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-high {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+        .result-medium {
+            background: linear-gradient(135deg, #ffd32a, #f79f1f);
+            color: white;
+        }
+        .result-low {
+            background: linear-gradient(135deg, #0be881, #05c46b);
+            color: white;
+        }
+        .result-score {
+            font-size: 3rem;
+            font-weight: 800;
+        }
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(102,126,234,0.1);
+            color: #667eea;
+            font-size: 1.3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="main-card">
+                    <!-- Header -->
+                    <div class="header-section">
+                        <i class="fas fa-heartbeat fa-3x mb-3"></i>
+                        <h1>Health Risk Prediction System</h1>
+                        <p class="mb-0 opacity-75">Enter patient details to predict health risk score</p>
+                    </div>
+
+                    <!-- Form -->
+                    <div class="p-4">
+                        <form id="predictionForm">
+
+                            <!-- Personal Info -->
+                            <h5 class="section-title">
+                                <i class="fas fa-user me-2"></i>Personal Information
+                            </h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-4">
+                                    <label class="form-label">Age</label>
+                                    <input type="number" class="form-control" id="Age" placeholder="e.g. 45" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Gender</label>
+                                    <select class="form-select" id="Gender">
+                                        <option value="1">Male</option>
+                                        <option value="0">Female</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">BMI</label>
+                                    <input type="number" step="0.1" class="form-control" id="BMI" placeholder="e.g. 25.5" required>
+                                </div>
+                            </div>
+
+                            <!-- Medical Info -->
+                            <h5 class="section-title">
+                                <i class="fas fa-stethoscope me-2"></i>Medical Information
+                            </h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-4">
+                                    <label class="form-label">Cholesterol</label>
+                                    <input type="number" class="form-control" id="Cholesterol" placeholder="e.g. 200" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Fasting Blood Sugar</label>
+                                    <input type="number" class="form-control" id="Fasting_Blood_Sugar" placeholder="e.g. 100" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Max Heart Rate</label>
+                                    <input type="number" class="form-control" id="Max_Heart_Rate" placeholder="e.g. 150" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Diabetes</label>
+                                    <select class="form-select" id="Diabetes">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Hypertension</label>
+                                    <select class="form-select" id="Hypertension">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Family History</label>
+                                    <select class="form-select" id="Family_History">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">ECG Result</label>
+                                    <select class="form-select" id="ECG_Result">
+                                        <option value="Normal">Normal</option>
+                                        <option value="ST">ST</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Risk Score</label>
+                                    <input type="number" step="0.1" class="form-control" id="Risk_Score" placeholder="e.g. 30" required>
+                                </div>
+                            </div>
+
+                            <!-- Lifestyle -->
+                            <h5 class="section-title">
+                                <i class="fas fa-running me-2"></i>Lifestyle Information
+                            </h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-4">
+                                    <label class="form-label">Smoking Status</label>
+                                    <select class="form-select" id="Smoking_Status">
+                                        <option value="Never">Never</option>
+                                        <option value="Former">Former</option>
+                                        <option value="Current">Current</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Physical Activity</label>
+                                    <select class="form-select" id="Physical_Activity">
+                                        <option value="High">High</option>
+                                        <option value="Moderate">Moderate</option>
+                                        <option value="Low">Low</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Alcohol Consumption</label>
+                                    <input type="number" step="0.1" class="form-control" id="Alcohol_Consumption" placeholder="e.g. 1.5" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Diet Quality Score</label>
+                                    <input type="number" step="0.1" class="form-control" id="Diet_Quality_Score" placeholder="e.g. 7" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Sleep Hours</label>
+                                    <input type="number" step="0.1" class="form-control" id="Sleep_Hours" placeholder="e.g. 6" required>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-predict">
+                                <i class="fas fa-search me-2"></i>Predict Risk Score
+                            </button>
+                        </form>
+
+                        <!-- Result Box -->
+                        <div class="result-box" id="resultBox">
+                            <i class="fas fa-heartbeat fa-2x mb-3"></i>
+                            <p class="mb-1 fs-5">Predicted Risk Score</p>
+                            <div class="result-score" id="resultScore"></div>
+                            <p class="mt-2 fs-5 fw-bold" id="resultMessage"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const smoking = document.getElementById('Smoking_Status').value;
+            const activity = document.getElementById('Physical_Activity').value;
+            const ecg = document.getElementById('ECG_Result').value;
+
+            const data = {
+                Age: parseFloat(document.getElementById('Age').value),
+                Cholesterol: parseFloat(document.getElementById('Cholesterol').value),
+                Fasting_Blood_Sugar: parseFloat(document.getElementById('Fasting_Blood_Sugar').value),
+                Max_Heart_Rate: parseFloat(document.getElementById('Max_Heart_Rate').value),
+                Alcohol_Consumption: parseFloat(document.getElementById('Alcohol_Consumption').value),
+                Diet_Quality_Score: parseFloat(document.getElementById('Diet_Quality_Score').value),
+                Sleep_Hours: parseFloat(document.getElementById('Sleep_Hours').value),
+                BMI: parseFloat(document.getElementById('BMI').value),
+                Diabetes: parseInt(document.getElementById('Diabetes').value),
+                Hypertension: parseInt(document.getElementById('Hypertension').value),
+                Family_History: parseInt(document.getElementById('Family_History').value),
+                Risk_Score: parseFloat(document.getElementById('Risk_Score').value),
+                Gender_Male: parseInt(document.getElementById('Gender').value),
+                ECG_Result_Normal: ecg === 'Normal' ? 1 : 0,
+                ECG_Result_ST: ecg === 'ST' ? 1 : 0,
+                Smoking_Status_Former: smoking === 'Former' ? 1 : 0,
+                Smoking_Status_Never: smoking === 'Never' ? 1 : 0,
+                Physical_Activity_Level_Low: activity === 'Low' ? 1 : 0,
+                Physical_Activity_Level_Moderate: activity === 'Moderate' ? 1 : 0,
+            };
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                const score = result.Prediction;
+                const box = document.getElementById('resultBox');
+                const scoreEl = document.getElementById('resultScore');
+                const msgEl = document.getElementById('resultMessage');
+
+                scoreEl.textContent = score;
+                box.className = 'result-box';
+
+                if (score >= 0.7) {
+                    box.classList.add('result-high');
+                    msgEl.textContent = '⚠️ HIGH RISK — Immediate medical attention needed!';
+                } else if (score >= 0.4) {
+                    box.classList.add('result-medium');
+                    msgEl.textContent = '⚡ MODERATE RISK — Regular checkup recommended!';
+                } else {
+                    box.classList.add('result-low');
+                    msgEl.textContent = '✅ LOW RISK — Keep maintaining healthy lifestyle!';
+                }
+
+                box.style.display = 'block';
+                box.scrollIntoView({behavior: 'smooth'});
+
+            } catch (error) {
+                alert('Error connecting to server!');
+            }
+        });
+    </script>
+</body>
+</html>
